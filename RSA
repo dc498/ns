@@ -1,0 +1,51 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+int gcd(int a, int b)
+{
+    while (b != 0)
+    {
+        int temp = a % b;
+        a = b;
+        b = temp;
+    }
+    return a;
+}
+
+int main()
+{
+    int p = 3;
+    int q = 11;
+    int n = p * q;
+    int phi = (p - 1) * (q - 1);
+    int e;
+
+    for (e = 2; e < phi; e++)
+    {
+        if (gcd(e, phi) == 1)
+            break;
+    }
+    int d;
+
+    for (d = 1; d < phi; d++)
+    {
+        if ((d * e) % phi == 1)
+            break;
+    }
+    int msg = 7;
+    int encrypted = pow(msg, e);
+    encrypted = encrypted % n;
+    int decrypted = pow(encrypted, d);
+    decrypted = decrypted % n;
+    cout << "Public Key (e, n)       : ("
+         << e << ", " << n << ")" << endl;
+    cout << "Private Key (d, n)      : ("
+         << d << ", " << n << ")" << endl;
+    cout << "Original Message        : "
+         << msg << endl;
+    cout << "Encrypted Message       : "
+         << encrypted << endl;
+    cout << "Decrypted Message       : "
+         << decrypted << endl;
+    return 0;
+}
