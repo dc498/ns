@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+using namespace std;
+string XOR(string a, string b)
+{
+    string result = "";
+    for (int i = 0; i < a.length(); i++)
+    {
+        int x = stoi(a.substr(i, 1), nullptr, 16);
+        int y = stoi(b.substr(i, 1), nullptr, 16);
+        result += "0123456789ABCDEF"[x ^ y];
+    }
+    return result;
+}
+int main()
+{
+    string L = "18CA18AD";
+    string R = "5A78E394";
+    string roundKeys[4] =
+    {
+        "194CD072",
+        "4568581A",
+        "06EDA4AC",
+        "DA2D032B"
+    };
+    cout << "ENCRYPTION:\n";
+    for (int i = 0; i < 4; i++)
+    {
+        string temp = R;
+        R = XOR(L, roundKeys[i]);
+        L = temp;
+        cout << "Round " << i + 1
+             << "  L = " << L
+             << "  R = " << R << endl;
+    }
+    string cipherText = L + R;
+    cout << "\nCipher Text = "
+         << cipherText << endl;
+    cout << "\nDECRYPTION:\n";
+    for (int i = 3; i >= 0; i--)
+    {
+        string temp = L;
+        L = XOR(R, roundKeys[i]);
+        R = temp;
+        cout << "Round " << 4 - i
+             << "  L = " << L
+             << "  R = " << R << endl;
+    }
+    cout << "\nRecovered Plain Text = "
+         << L + R << endl;
+    return 0;
+}
