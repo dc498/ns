@@ -1,50 +1,16 @@
-from Crypto.Cipher import AES
-from Crypto.Random import get_random_bytes
-from Crypto.Util.Padding import pad, unpad
-import base64
-
-def encrypt_AES(plaintext, key):
-
-    cipher = AES.new(key, AES.MODE_CBC)
-
-    ciphertext = cipher.encrypt(
-        pad(plaintext.encode(), AES.block_size)
-    )
-
-    return (
-        base64.b64encode(cipher.iv).decode(),
-        base64.b64encode(ciphertext).decode()
-    )
-
-def decrypt_AES(ciphertext, key, iv):
-
-    cipher = AES.new(
-        key,
-        AES.MODE_CBC,
-        iv=base64.b64decode(iv)
-    )
-
-    decrypted = unpad(
-        cipher.decrypt(
-            base64.b64decode(ciphertext)
-        ),
-        AES.block_size
-    )
-
-    return decrypted.decode()
-
-key = get_random_bytes(16)
-
 plaintext = "Hello i2it"
+key = 3
 
-iv, encrypted_text = encrypt_AES(plaintext, key)
+encrypted_text = ""
+
+for ch in plaintext:
+    encrypted_text += chr(ord(ch) + key)
 
 print("Encrypted Text:", encrypted_text)
 
-decrypted_text = decrypt_AES(
-    encrypted_text,
-    key,
-    iv
-)
+decrypted_text = ""
+
+for ch in encrypted_text:
+    decrypted_text += chr(ord(ch) - key)
 
 print("Decrypted Text:", decrypted_text)
