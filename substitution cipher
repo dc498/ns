@@ -1,0 +1,32 @@
+#include <iostream>
+#include <string>
+#include <map>
+using namespace std;
+int main(){
+    string all_letters =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    map<char, char> dict1;
+    int key = 4;
+    for (int i = 0; i < all_letters.length(); i++)
+    {
+        dict1[all_letters[i]] =
+            all_letters[(i + key) % all_letters.length()];
+    }
+
+    string plain_txt = "I am studying in i2it";
+    string cipher_txt="";
+    for (char &c : plain_txt)
+    {
+        if (dict1.find(c) != dict1.end())
+        {
+            cipher_txt += dict1[c];
+        }
+        else
+        {
+            cipher_txt += c;
+        }
+    }
+    cout << "Plain Text  : " << plain_txt << endl;
+    cout << "Cipher Text : " << cipher_txt << endl;
+    return 0;
+}
