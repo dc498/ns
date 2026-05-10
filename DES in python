@@ -1,0 +1,81 @@
+IP=[2,6,3,1,4,8,5,7]
+FP=[4,1,3,5,7,2,8,6]
+
+roundKeys=[
+"10011001",
+"00110011",
+"01100110",
+"11001100"
+]
+
+def permute(data,table):
+    output=""
+    for i in table:
+        output+=data[i-1]
+    return output
+
+def XOR(a,b):
+    result=""
+    for i in range(len(a)):
+        if a[i]==b[i]:
+            result+="0"
+        else:
+            result+="1"
+    return result
+
+def encrypt(plaintext,roundKeys):
+    plaintext=permute(plaintext,IP)
+    print("\nENCRYPTION:")
+    print("After Initial Permutation :",plaintext)
+
+    L=plaintext[:4]
+    R=plaintext[4:]
+
+    for i in range(4):
+        temp=R
+        expandedR=R+R
+        result=XOR(expandedR,roundKeys[i])
+        result=result[:4]
+        R=XOR(L,result)
+        L=temp
+
+        print("Round",i+1," L =",L," R =",R)
+
+    combined=L+R
+    cipherText=permute(combined,FP)
+
+    return cipherText
+
+def decrypt(cipherText,roundKeys):
+    cipherText=permute(cipherText,IP)
+
+    print("\nDECRYPTION:")
+    print("After Initial Permutation :",cipherText)
+
+    L=cipherText[:4]
+    R=cipherText[4:]
+
+    for i in range(3,-1,-1):
+        temp=R
+        expandedR=R+R
+        result=XOR(expandedR,roundKeys[i])
+        result=result[:4]
+        R=XOR(L,result)
+        L=temp
+
+        print("Round",4-i," L =",L," R =",R)
+
+    combined=L+R
+    plainText=permute(combined,FP)
+
+    return plainText
+
+plaintext="10101010"
+
+cipherText=encrypt(plaintext,roundKeys)
+
+print("\nCipher Text =",cipherText)
+
+recoveredText=decrypt(cipherText,roundKeys)
+
+print("\nRecovered Plain Text =",recoveredText)
