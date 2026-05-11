@@ -1,0 +1,85 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+
+// Function for gcd
+int gcd(int a, int h)
+{
+    int temp;
+    while (1)
+    {
+        temp = a % h;
+
+        if (temp == 0)
+            return h;
+
+        a = h;
+        h = temp;
+    }
+}
+
+// Modular exponentiation
+long long modExp(long long base, long long exp, long long mod)
+{
+    long long result = 1;
+
+    while (exp > 0)
+    {
+        result = (result * base) % mod;
+        exp--;
+    }
+
+    return result;
+}
+
+int main()
+{
+    // Step 1: Choose two prime numbers
+    int p = 3;
+    int q = 11;
+
+    // Step 2: Calculate n and phi
+    int n = p * q;
+    int phi = (p - 1) * (q - 1);
+
+    // Step 3: Choose e
+    int e = 7;
+
+    while (e < phi)
+    {
+        if (gcd(e, phi) == 1)
+            break;
+        else
+            e++;
+    }
+
+    // Step 4: Calculate d
+    int d = 3;
+
+    while ((d * e) % phi != 1)
+    {
+        d++;
+    }
+
+    // Message
+    int msg = 9;
+
+    cout << "Original Message = " << msg << endl;
+
+    // Step 5: Create Digital Signature
+    long long signature = modExp(msg, d, n);
+
+    cout << "Digital Signature = " << signature << endl;
+
+    // Step 6: Verify Signature
+    long long verified = modExp(signature, e, n);
+
+    cout << "Verified Message = " << verified << endl;
+
+    if (verified == msg)
+        cout << "Digital Signature Verified Successfully";
+    else
+        cout << "Verification Failed";
+
+    return 0;
+}
